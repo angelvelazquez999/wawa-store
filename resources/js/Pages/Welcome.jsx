@@ -1,7 +1,8 @@
 import { Head, Link } from '@inertiajs/react';
 import { ArrowRightIcon, TruckIcon, ShieldIcon } from 'lucide-react';
 
-const Welcome = ({ auth, laravelVersion, phpVersion }) => {
+
+const Welcome = ({ auth }) => {
     const featuredProducts = [{
         id: 1,
         name: 'Urban Cargo Pants',
@@ -35,8 +36,9 @@ const Welcome = ({ auth, laravelVersion, phpVersion }) => {
     }];
 
     return (
+        <>
+        {/* <Navbar /> */}
         <div className="w-full">
-            {/* Hero Section */}
             <section className="relative bg-black text-white">
                 <div className="absolute inset-0 z-0">
                     <img src="https://images.unsplash.com/photo-1556905055-8f358a7a47b2?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80" alt="Urban fashion" className="w-full h-full object-cover opacity-50" />
@@ -166,6 +168,7 @@ const Welcome = ({ auth, laravelVersion, phpVersion }) => {
                 </div>
             </section>
         </div>
+        </>
     )
 
 };
