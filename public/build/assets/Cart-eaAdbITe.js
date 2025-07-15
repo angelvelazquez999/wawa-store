@@ -1,0 +1,206 @@
+import { jsxs, jsx } from "react/jsx-runtime";
+import { L as Layout } from "./AuthenticatedLayout-B14YG1MC.js";
+import { Head } from "@inertiajs/react";
+import { useState, useEffect } from "react";
+import Swal from "sweetalert2";
+import DeleteIcon from "@mui/icons-material/Delete";
+import { c as config } from "./config-SkdcRZ4H.js";
+import "@headlessui/react";
+import "lucide-react";
+import "@heroicons/react/24/outline";
+import "@mui/icons-material/ShoppingCart";
+const apiBaseUrl = config.apiBaseUrl;
+function Cart() {
+  const [loading, setLoading] = useState(false);
+  const [cartItems, setCartItems] = useState([]);
+  const fetchCartItems = async () => {
+    try {
+      setLoading(true);
+      const headers = {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute("content"),
+        Authorization: ""
+      };
+      const token = localStorage.getItem("token");
+      if (token) {
+        headers.Authorization = `Bearer ${token}`;
+      }
+      const response = await fetch(`${apiBaseUrl}/cart`, {
+        method: "GET",
+        headers,
+        credentials: "same-origin"
+      });
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error((errorData == null ? void 0 : errorData.message) || "Error al obtener el carrito.");
+      }
+      const data = await response.json();
+      setCartItems(data);
+    } catch (error) {
+      Swal.fire({
+        icon: "error",
+        title: "Error al obtener los datos.",
+        text: error.message,
+        confirmButtonColor: "#646464ff"
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+  useEffect(() => {
+    fetchCartItems();
+  }, []);
+  const removeFromCart = async (cartId) => {
+    try {
+      const response = await fetch(`${apiBaseUrl}/cart/${cartId}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute("content"),
+          Authorization: `Bearer ${localStorage.getItem("token")}`
+        },
+        credentials: "same-origin"
+      });
+      if (!response.ok) {
+        throw new Error("Error al eliminar el producto.");
+      }
+      setCartItems((prev) => prev.filter((item) => item.id !== cartId));
+      Swal.fire({
+        icon: "success",
+        title: "Producto eliminado",
+        timer: 1e3,
+        showConfirmButton: false
+      });
+      window.dispatchEvent(new Event("cartChanged"));
+    } catch (error) {
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: error.message,
+        confirmButtonColor: "#646464ff"
+      });
+    }
+  };
+  const total = (cartItems || []).reduce((sum, item) => {
+    const price = Number(item.product.price);
+    return sum + (isNaN(price) ? 0 : price);
+  }, 0).toFixed(2);
+  const sendToShipment = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const addressRes = await fetch(`${apiBaseUrl}/address`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute("content"),
+          Authorization: `Bearer ${localStorage.getItem("token")}`
+        },
+        credentials: "same-origin"
+      });
+      if (!addressRes.ok) throw new Error("Error al obtener direcciones");
+      const addresses = await addressRes.json();
+      if (!addresses.length) {
+        return Swal.fire("Sin direcciones", "Agrega una dirección primero.", "warning");
+      }
+      const { value: addressId } = await Swal.fire({
+        title: "Selecciona una dirección",
+        input: "select",
+        inputOptions: addresses.reduce((opts, addr) => {
+          opts[addr.id] = `${addr.street}, ${addr.city}`;
+          return opts;
+        }, {}),
+        inputPlaceholder: "Selecciona una dirección",
+        showCancelButton: true,
+        confirmButtonText: "Confirmar",
+        cancelButtonText: "Cancelar",
+        confirmButtonColor: "#000"
+      });
+      if (!addressId) return;
+      const shipmentRes = await fetch(`${apiBaseUrl}/shipments`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: token ? `Bearer ${token}` : "",
+          "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute("content"),
+          Accept: "application/json"
+        },
+        body: JSON.stringify({ address_id: addressId })
+      });
+      if (!shipmentRes.ok) {
+        const errorData = await shipmentRes.json();
+        throw new Error(errorData.message || "Error al crear el envío");
+      }
+      const shipment = await shipmentRes.json();
+      Swal.fire({
+        icon: "success",
+        title: "Envío creado",
+        text: "Tu pedido fue procesado correctamente.",
+        timer: 1500,
+        showConfirmButton: false
+      });
+      window.location.href = `/shipments/${shipment.id}`;
+    } catch (error) {
+      Swal.fire({
+        icon: "error",
+        title: "Error al finalizar compra",
+        text: error.message,
+        confirmButtonColor: "#646464ff"
+      });
+    }
+  };
+  return /* @__PURE__ */ jsxs(Layout, { children: [
+    /* @__PURE__ */ jsx(Head, { title: "Carrito" }),
+    /* @__PURE__ */ jsxs("div", { className: "max-w-5xl mx-auto px-4 py-10", children: [
+      /* @__PURE__ */ jsx("h1", { className: "text-3xl font-bold mb-6", children: "Tu Carrito" }),
+      loading ? /* @__PURE__ */ jsx("p", { className: "text-gray-500", children: "Cargando..." }) : cartItems.length === 0 ? /* @__PURE__ */ jsx("p", { className: "text-gray-600", children: "Tu carrito está vacío." }) : /* @__PURE__ */ jsxs("div", { className: "space-y-6", children: [
+        cartItems.map((item) => {
+          const price = Number(item.product.price);
+          return /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-4 bg-white p-4 rounded-lg shadow-sm", children: [
+            /* @__PURE__ */ jsx(
+              "img",
+              {
+                src: item.product.image_path,
+                alt: item.product.name,
+                className: "w-24 h-24 object-cover rounded-md"
+              }
+            ),
+            /* @__PURE__ */ jsxs("div", { className: "flex-1", children: [
+              /* @__PURE__ */ jsx("h2", { className: "text-lg font-semibold text-gray-800", children: item.product.name }),
+              /* @__PURE__ */ jsxs("p", { className: "text-gray-600", children: [
+                "$",
+                isNaN(price) ? "0.00" : price.toFixed(2)
+              ] })
+            ] }),
+            /* @__PURE__ */ jsx(
+              "button",
+              {
+                onClick: () => removeFromCart(item.id),
+                className: "text-red-500 hover:text-red-700",
+                children: /* @__PURE__ */ jsx(DeleteIcon, {})
+              }
+            )
+          ] }, item.id);
+        }),
+        /* @__PURE__ */ jsxs("div", { className: "flex justify-between items-center border-t pt-4", children: [
+          /* @__PURE__ */ jsx("p", { className: "text-xl font-semibold", children: "Total:" }),
+          /* @__PURE__ */ jsxs("p", { className: "text-xl font-bold text-gray-800", children: [
+            "$",
+            total
+          ] })
+        ] }),
+        /* @__PURE__ */ jsx(
+          "button",
+          {
+            className: "w-full mt-4 bg-black text-white py-3 rounded-md hover:bg-gray-800 transition-colors",
+            onClick: sendToShipment,
+            children: "Finalizar compra"
+          }
+        )
+      ] })
+    ] })
+  ] });
+}
+export {
+  Cart as default
+};
