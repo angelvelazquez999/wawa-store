@@ -47,7 +47,7 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::get('/{any}', function () {
-    return Inertia::render('Welcome'); // o el componente raíz que maneje tu SPA React
+    return Inertia::render('Welcome'); // O el componente raíz que uses
 })->where('any', '.*');
 
 require __DIR__ . '/auth.php';
