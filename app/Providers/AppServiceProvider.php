@@ -18,11 +18,8 @@ class AppServiceProvider extends ServiceProvider
     /**
      * Bootstrap any application services.
      */
-    public function boot()
+    public function boot(): void
     {
-        // Asegurar que el directorio de vistas compiladas existe
-        if (!is_dir(storage_path('framework/views'))) {
-            mkdir(storage_path('framework/views'), 0755, true);
-        }
+        Vite::prefetch(concurrency: 3);
     }
 }
