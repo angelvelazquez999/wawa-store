@@ -46,4 +46,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/products', [ProductController::class, 'store'])->name('products.store');
 });
 
+Route::get('/{any}', function () {
+    return Inertia::render('Welcome'); // o el componente raíz que maneje tu SPA React
+})->where('any', '.*');
+
 require __DIR__ . '/auth.php';
