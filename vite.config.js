@@ -11,4 +11,14 @@ export default defineConfig({
         }),
         react(),
     ],
+    build: {
+        outDir: 'public/build',
+        emptyOutDir: true,
+    },
+    resolve: {
+        alias: {
+            '@': '/resources/js',
+            '@src': '/resources/js/src',
+        },
+    },
 });

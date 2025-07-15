@@ -20,11 +20,14 @@ export default forwardRef(function TextInput(
         <input
             {...props}
             type={type}
+            ref={localRef}
             className={
-                'rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 dark:focus:border-indigo-600 dark:focus:ring-indigo-600 ' +
+                'rounded-md border border-gray-300 bg-white text-gray-800 shadow-sm ' +
+                'focus:border-gray-500 focus:ring-gray-500 ' +
+                'dark:border-gray-400 dark:bg-[#ebebeb] dark:text-gray-900 ' +
+                'dark:placeholder-gray-700 dark:focus:border-gray-700 dark:focus:ring-gray-700 ' +
                 className
             }
-            ref={localRef}
         />
     );
 });
