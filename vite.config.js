@@ -7,14 +7,17 @@ export default defineConfig({
     plugins: [
         laravel({
             input: 'resources/js/app.jsx',
-            ssr: 'resources/js/ssr.jsx',
             refresh: true,
         }),
         react(),
     ],
     build: {
+        manifest: true,
         outDir: 'public/build',
         emptyOutDir: true,
+        rollupOptions: {
+            input: 'resources/js/app.jsx'
+        }
     },
     resolve: {
         alias: {
