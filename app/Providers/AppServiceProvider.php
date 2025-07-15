@@ -18,10 +18,11 @@ class AppServiceProvider extends ServiceProvider
     /**
      * Bootstrap any application services.
      */
-    public function boot(): void
+    public function boot()
     {
-         if (app()->environment('production')) {
-            config(['view.compiled' => false]);
+        // Asegurar que el directorio de vistas compiladas existe
+        if (!is_dir(storage_path('framework/views'))) {
+            mkdir(storage_path('framework/views'), 0755, true);
         }
     }
 }
