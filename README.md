@@ -10,3 +10,4 @@
 - php artisan db:seed
 - composer run dev
 
+ya hice esta madre, amos a ponernos a chambear q el alan quiere avances mañana papus
