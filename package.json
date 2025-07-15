@@ -7,6 +7,10 @@
         "dev": "vite",
         "lint": "eslint resources/js --ext .js,.jsx --ignore-path .gitignore --fix"
     },
+    "engines": {
+        "node": "18.x",
+        "npm": "9.x"
+    },
     "devDependencies": {
         "@headlessui/react": "^2.0.0",
         "@inertiajs/react": "^2.0.14",
