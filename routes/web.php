@@ -46,8 +46,5 @@ Route::middleware('auth')->group(function () {
     Route::post('/products', [ProductController::class, 'store'])->name('products.store');
 });
 
-Route::get('/{any}', function () {
-    return Inertia::render('Welcome'); // O el componente raíz que uses
-})->where('any', '.*');
 
 require __DIR__ . '/auth.php';
