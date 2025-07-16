@@ -3,10 +3,9 @@
     "private": true,
     "type": "module",
     "scripts": {
-        "build": "vite build",
         "dev": "vite",
-        "heroku-postbuild": "npm run build",
-        "lint": "eslint resources/js --ext .js,.jsx --ignore-path .gitignore --fix"
+        "build": "vite build",
+        "preview": "vite preview"
     },
     "engines": {
         "node": "18.x",

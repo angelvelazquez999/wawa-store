@@ -6,7 +6,7 @@ import path from 'path';
 export default defineConfig({
     plugins: [
         laravel({
-            input: 'resources/js/app.jsx',
+            input: ['resources/css/app.css', 'resources/js/app.jsx'],
             refresh: true,
         }),
         react(),
@@ -16,13 +16,23 @@ export default defineConfig({
         outDir: 'public/build',
         emptyOutDir: true,
         rollupOptions: {
-            input: 'resources/js/app.jsx'
+            input: {
+                app: 'resources/js/app.jsx',
+                css: 'resources/css/app.css'
+            }
         }
     },
     resolve: {
         alias: {
             '@': path.resolve(__dirname, 'resources/js'),
             '@src': path.resolve(__dirname, 'resources/js/src'),
+        },
+    },
+    server: {
+        host: '0.0.0.0',
+        port: 5173,
+        hmr: {
+            host: 'localhost',
         },
     },
 });
