@@ -8,6 +8,7 @@ import { MenuIcon, XIcon, UserIcon, ShoppingBagIcon, SearchIcon } from 'lucide-r
 import { ArrowRightOnRectangleIcon } from '@heroicons/react/24/outline';
 import { Dog } from 'lucide-react';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 
 export default function Layout({ header, children, showButtons = false }) {
     const user = usePage().props.auth?.user;
@@ -70,6 +71,9 @@ export default function Layout({ header, children, showButtons = false }) {
                                         {cartCount}
                                     </span>
                                 )}
+                            </NavLink>
+                            <NavLink href={route('shipments.show')}>
+                                <LocalShippingIcon />
                             </NavLink>
 
                             {user ? (

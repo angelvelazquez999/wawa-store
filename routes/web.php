@@ -25,6 +25,7 @@ Route::get('/dashboard', function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::get('/showCart', [CartController::class, 'show'])->name('cart.show')->middleware('auth');
+Route::get('/showShipments', [ShipmentController::class, 'show'])->name('shipments.show')->middleware('auth');
 
 
 Route::middleware('auth')->group(function () {
@@ -40,7 +41,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/cart/{cart}', [CartController::class, 'destroy'])->name('cart.destroy');
     Route::get('/cart/count', [CartController::class, 'count'])->name('cart.count');
     Route::get('/shipments', [ShipmentController::class, 'index'])->name('shipments.index');
-    Route::get('/shipments/{shipment}', [ShipmentController::class, 'show'])->name('shipments.show');
+    Route::get('/shipments/{shipment}', [ShipmentController::class, 'show']);
     Route::post('/shipments', [ShipmentController::class, 'store'])->name('shipments.store');
     Route::get('/products', [ProductController::class, 'index'])->name('products.index');
     Route::post('/products', [ProductController::class, 'store'])->name('products.store');

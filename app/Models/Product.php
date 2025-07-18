@@ -4,7 +4,10 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Cart;
+use App\Models\Shipment;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+
 
 
 class Product extends Model
@@ -30,5 +33,10 @@ class Product extends Model
     public function scopeAvailable($query)
     {
         return $query->where('stock', '>', 0);
+    }
+
+    public function shipments()
+    {
+        return $this->belongsToMany(Shipment::class);
     }
 }

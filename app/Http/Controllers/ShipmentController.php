@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Shipment;
+use App\Models\Product;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Inertia\Inertia;
 
 class ShipmentController extends Controller
 {
@@ -15,7 +17,13 @@ class ShipmentController extends Controller
     use AuthorizesRequests;
     public function index()
     {
-        $shipments = Auth::user()->shipments()->latest()->get();
+        $shipments = Auth::user()->shipments()->with('address')->latest()->get();
+
+        // Para cada shipment, obtener productos a partir del array products_ids
+        $shipments->each(function ($shipment) {
+            $shipment->products = Product::whereIn('id', $shipment->products_ids)->get();
+        });
+
         return response()->json($shipments);
     }
 
@@ -77,20 +85,9 @@ class ShipmentController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show()
     {
-        $shipment = Shipment::find($id);
-
-        if (!$shipment) {
-            return response()->json(['message' => 'Envío no encontrado.'], 404);
-        }
-
-        // Asegúrate que solo el dueño puede verlo
-        if ($shipment->user_id !== Auth::id()) {
-            return response()->json(['message' => 'No autorizado.'], 403);
-        }
-
-        return response()->json($shipment);
+        return Inertia::render('Shipments');
     }
 
     /**
