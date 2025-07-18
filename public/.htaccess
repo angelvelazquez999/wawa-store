@@ -5,6 +5,12 @@
 
     RewriteEngine On
 
+    # Bloquear acceso a .env, .git, composer.*, etc.
+    RewriteRule ^(\.env|\.git|\.svn|composer\.lock|composer\.json|package\.json|webpack\.mix\.js|vite\.config\.js|phpunit\.xml|\.htaccess)$ - [F,L]
+
+    # Bloquear acceso directo a carpetas sensibles
+    RewriteRule ^(storage|vendor|node_modules|resources|tests)/ - [F,L]
+
     # Handle Authorization Header
     RewriteCond %{HTTP:Authorization} .
     RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
